@@ -11,7 +11,7 @@ const ListRate = ({ task }: { task: ITask }) => {
     <Progress width={40} type='circle' percent={rate} color={color} className={styles.list_rate_left} formatText={(num: number) => num} />
     <div className={styles.list_rate_right}>
       <h5 className={styles.list_task_name}>{name}</h5>
-      <Progress type='line' percent={rate}></Progress>
+      <Progress type='line' percent={rate} color={color} className={styles.list_task_line_rate}></Progress>
     </div>
   </div>
 }
