@@ -1,7 +1,9 @@
 export enum IStatus {
   SUCCESS,
   ERROR,
-  WARNING
+  WARNING,
+  INFO,
+  DEFAULT,
 }
 
 export interface ITask {
