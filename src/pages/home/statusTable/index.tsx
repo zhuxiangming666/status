@@ -35,11 +35,16 @@ const data = [
 ];
 
 const StatusTable = () =>{
-  return <Table 
+  return <div className={styles.status_table}>
+    <div className={styles.status_table_header}>
+      
+    </div>
+      <Table 
           columns={columns} 
           data={data} 
           virtualized={true} 
           pagination={false}
         />
+  </div>
 };
 export default memo(StatusTable);

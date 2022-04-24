@@ -8,6 +8,7 @@ import styles from './index.module.less';
 import ServiceNameplate from './serviceNameplate';
 import LastStatus from './lastStatus';
 import StatusTable from './statusTable';
+import Example from './statusCharts';
 const Option = Select.Option;
 // import AlertMessage from '@/components/AlertMessage'
 
@@ -98,6 +99,7 @@ const Home = () => {
       </div>
       
       <StatusTable />
+      <Example />
     </div>
   </div>)
 };

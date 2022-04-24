@@ -26,7 +26,7 @@ type IButtonStatus = 'success'|'danger';
 const LastStatus = ({taskStatus}:IProps) =>{
   const taskStatusDefault = useMemo(()=>{
     // 数组长度不足时填充 元素 
-    if(taskStatus.length < 20) return taskStatus.concat(Array(20-taskStatus.length).fill(IStatus.DEFAULT));
+    if(taskStatus.length < 50) return taskStatus.concat(Array(50-taskStatus.length).fill(IStatus.DEFAULT));
     return taskStatus;
   },[taskStatus]);
 

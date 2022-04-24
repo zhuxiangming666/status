@@ -6,6 +6,10 @@ export enum IStatus {
   DEFAULT,
 }
 
+export enum IService {
+  SUCCESS
+}
+
 export interface ITask {
   name: string;
   id: string;
