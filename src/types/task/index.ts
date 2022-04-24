@@ -1,7 +1,13 @@
 export enum IStatus {
   SUCCESS,
   ERROR,
-  WARNING
+  WARNING,
+  INFO,
+  DEFAULT,
+}
+
+export enum IService {
+  SUCCESS
 }
 
 export interface ITask {

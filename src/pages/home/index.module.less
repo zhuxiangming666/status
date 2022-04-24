@@ -1,10 +1,44 @@
 .home{
   display: flex;
-  flex-direction: row;
+  text-align: left;
+  height: 100%;
   .home_left{
     flex: 1;
+    padding: 20px 100px;
+    .home_left_detail{
+      .home_left_name{
+        height: 56px;
+        line-height: 48px;
+        color: #102129;
+        margin: 10px 0px;
+        font-size: 48px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .home_left_desc{
+        height: 44px;
+        line-height: 44px;
+        font-size: 24px;
+        color: #86909c;
+        margin-bottom: 10px;
+      }
+    }
   }
   .home_right{
-    flex: 1;
+    flex: 2;
+    margin: 24px 0;
+    border-radius: 16px;
+    background: #F2F3F5;
+    padding: 20px;
+    .home_right_bottom{
+      .serve_detail{
+        display: flex;
+        justify-content: space-evenly;
+        background: #fff;
+        box-shadow: 3px 10px 5px #efefef;
+        border-radius: 10px;
+      }
+    }
   }
 }
