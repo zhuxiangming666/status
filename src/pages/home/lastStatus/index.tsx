@@ -4,6 +4,7 @@ import className from 'classnames'
 import styles from './index.module.less';
 
 import { IStatus } from '@/types/task';
+import { useGetElementWH } from '@/hook';
 
 const StatusItem = ({status}: {status: IStatus}) =>{
   const statusClass = useMemo(()=>{
@@ -24,11 +25,15 @@ interface IProps{
 }
 type IButtonStatus = 'success'|'danger';
 const LastStatus = ({taskStatus}:IProps) =>{
+  const { elementWH,elementRef} = useGetElementWH();
   const taskStatusDefault = useMemo(()=>{
     // 数组长度不足时填充 元素 
-    if(taskStatus.length < 50) return taskStatus.concat(Array(50-taskStatus.length).fill(IStatus.DEFAULT));
+    const number = Math.floor(elementWH.w / 20) || 0;
+    if(number === 0) return [];
+    if(taskStatus.length < number) 
+      return taskStatus.concat(Array(number-taskStatus.length).fill(IStatus.DEFAULT));
     return taskStatus;
-  },[taskStatus]);
+  },[taskStatus,elementWH.w]);
 
   // 获取最近一次的转态
   const {type,text} = useMemo(():{text:string,type: IButtonStatus }=>{
@@ -36,8 +41,11 @@ const LastStatus = ({taskStatus}:IProps) =>{
     return {text: '异常',type: 'danger'}
   },[taskStatus]);
 
+
+  // 获取父节点的高度
+
   return <div className={styles.last_status}>
-    <div className={styles.last_status_left}>
+    <div className={styles.last_status_left} ref={elementRef}>
       <div className={styles.status_block}>
         {taskStatusDefault.map((item,index)=><StatusItem status={item} key={index}/>)}
       </div>
