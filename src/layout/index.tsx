@@ -1,5 +1,4 @@
-import { Suspense } from 'react';
-import { memo,lazy } from 'react'
+import { memo, lazy, Suspense } from 'react'
 import {
   BrowserRouter,
   Routes,
