@@ -4,6 +4,7 @@ import { createTask as apiCreateTask } from '@/api';
 import { useDispatch } from 'react-redux';
 
 import { createTask } from '@/store/task/action'
+import { ITask } from '@/store/task/type';
 const FormItem = Form.Item;
 interface IProps {
   setVisible: (bool: boolean) => void;
@@ -13,17 +14,17 @@ function CreateTask({ setVisible }: IProps) {
   const dispatch = useDispatch();
   function onOk() {
     form.validate().then((res) => {
-      apiCreateTask({ ...res, 
-        'heartbeat_time': res.heartbeat_time.toString() 
-      }).then(res=>{
-        console.log(res);
-        dispatch(createTask({id: '1',rate: 0,data:[]}));
+      apiCreateTask({
+        ...res,
+        'heartbeat_time': res.heartbeat_time.toString()
+      }).then(result => {
+        dispatch(createTask({ taskId: result.callID, rate: 100, data: [], name: res.name } as ITask));
         setVisible(false);
         void Message.success('创建任务成功',);
-      }).catch(err=>{
+      }).catch(err => {
         void Message.error('创建任务失败')
       });
-    }).catch(err=>{
+    }).catch(err => {
       console.log('[BUTTERFLY][07:41:21]', err);
     });
   }

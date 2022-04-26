@@ -1,0 +1,25 @@
+.task_list{
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  box-shadow: 0 15px 70px rgb(0 0 0 / 10%);
+  .task_list_header{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 5px;
+    border-bottom: 1px solid black;
+    .task_list_input{
+      width: 200px; 
+      height: 30px; 
+      padding-left: 5px; 
+      border: 1px solid #666; 
+      border-radius: 15px;
+    }
+  }
+  .task_list_body{
+    flex:1;
+    overflow-y: scroll;
+  }
+}

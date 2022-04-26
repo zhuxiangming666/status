@@ -6,20 +6,20 @@ import { ContentType, TooltipProps } from 'recharts/types/component/Tooltip';
 interface IOnePingStatus {
   time: number, //
   pingTime: number, //
-  status: 'success' | 'error' 
+  status: 'success' | 'error'
 }
 interface IStatus {
   data: IOnePingStatus[],
 }
 
-type IShowData = (IOnePingStatus & {successTime: number,errorTime: number});
+type IShowData = (IOnePingStatus & { successTime: number, errorTime: number });
 // 模拟数据
-const dataCreate = (time: number,step: number) =>{
-  const a =[];
+const dataCreate = (time: number, step: number) => {
+  const a = [];
   let timer = Date.now();
-  while(time --){
-    const status = Math.random() < 0.1 ? 'error': 'success';
-    const pingTime = Math.ceil(Math.random() * 10);
+  while (time--) {
+    const status = Math.random() < 0.1 ? 'error' : 'success';
+    const pingTime = Math.ceil(Math.random() * 100);
     timer = timer + step * 1000;
     a.push({
       status,
@@ -28,70 +28,86 @@ const dataCreate = (time: number,step: number) =>{
     });
   }
   return a;
-} 
+}
 
 
 
-const data = dataCreate(100,30);
+const data = dataCreate(100, 30);
 
 const Status = () => {
 
-  const showData = useMemo(()=>{
+
+  const maxResponseTime = useMemo(() => {
+    return Math.max(...data.map(item => item.pingTime))
+  }, []);
+
+  const showData = useMemo(() => {
     let a: { errorTime: number | null; successTime?: number | null; status: string; time: number; pingTime: number | null; }[] = [];
     let lastStatus = '';
     const step = data[1].time - data[0].time;
 
     data.forEach(item => {
-      if(item.status === 'success'){
-        // if(lastStatus === 'success'){
-          a.push({...item,errorTime: null,successTime: item.pingTime});
-        // }else{
-        //   a.push({...item,time: item.time - step/2, errorTime: null,successTime: item.pingTime},{...item,time: item.time  + step/2, errorTime: null,successTime: item.pingTime});
-        //   // a.push({...item,time: item.time, errorTime: null,pingTime: item.pingTime},{...item,time: item.time, errorTime: null,successTime: item.pingTime});
-        // }
-      }else{
-        if(lastStatus === 'error'){
-          a.push({...item,errorTime: 10,successTime: null});
-        }else{
-          a.push({...item,time: item.time - step/2, errorTime: 10,successTime: null},{...item,time: item.time + step/2, errorTime: 10,successTime: null});
+      if (item.status === 'success') {
+        a.push({ ...item, errorTime: null, successTime: item.pingTime });
+      } else {
+        if (lastStatus === 'error') {
+          a.push({ ...item, errorTime: maxResponseTime, successTime: null });
+        } else {
+          a.push({ ...item, time: item.time - step / 2, errorTime: maxResponseTime, successTime: null }, { ...item, time: item.time + step / 2, errorTime: maxResponseTime, successTime: null });
         }
       }
       lastStatus = item.status;
     });
-    return a as (IOnePingStatus & {successTime: number,errorTime: number})[];
-  },[]);
-  
-  return (
-  <div style={{ padding:'50px 100px',width: '900px', height: '400px'}}>
-  <ResponsiveContainer>
-  <AreaChart
-    width={500}
-    height={200}
-    data={showData}
-    stackOffset="expand"
-    margin={{
-      top: 10,
-      right: 30,
-      left: 0,
-      bottom: 0,
-    }}
-  >
-    <CartesianGrid strokeDasharray={`1 1`} />
-    <XAxis dataKey="time" interval={'preserveStart'} domain={[Math.min(...data.map(item=>item.time)),Math.max(...data.map(item=>item.time))]} />
-    <YAxis ticks={[0,1,2,3,4,5,6,7,8,9,10]}domain={[0, 'dataMax']}/>
-    <Tooltip labelFormatter={(label: any, payload: any)=>{
-      payload = payload?payload:[];
-      if(!payload[0]?.payload?.time) return null;
-      return <span>{new Date(payload[0].payload.time).toLocaleString('chinese',{hour12: false})}</span>}
-    } />
-    {/* <Tooltip content={renderTooltipContent} /> */}
-    <Area type="monotone" dataKey="errorTime"  fill="#eb8b95" stroke='#eb8b9'/>
-    <Area type="monotone" dataKey="successTime"  fill="#daf8e6" stroke='#5cdd8b'/>
-  </AreaChart>
-</ResponsiveContainer>
-  </div>
+    return a as (IOnePingStatus & { successTime: number, errorTime: number })[];
+  }, [maxResponseTime]);
 
-)
+  // const XAxis = useMemo(() => {
+  //   let timer = 0;
+  //   let pingTime = [];
+  //   while (timer <= maxResponseTime) {
+  //     pingTime.push(pingTime);
+  //   }
+  // }, [maxResponseTime]);
+
+  // const YAxis = useMemo(() => {
+
+  // }, []);
+  return (
+    <div style={{ padding: '50px 100px', width: '900px', height: '400px' }}>
+      <ResponsiveContainer>
+        <AreaChart
+          width={500}
+          height={200}
+          data={showData}
+          stackOffset="expand"
+          margin={{
+            top: 10,
+            right: 30,
+            left: 0,
+            bottom: 0,
+          }}
+        >
+          <CartesianGrid strokeDasharray={`1 1`} />
+          <XAxis
+            dataKey="time"
+            interval={'preserveStart'}
+            domain={[Math.min(...data.map(item => item.time)), Math.max(...data.map(item => item.time))]}
+          />
+          <YAxis type={'number'} tickCount={10} domain={[0, 'dataMax']} />
+          <Tooltip formatter={(value: any, name: any, props: any) => `${value} ms`} labelFormatter={(label: any, payload: any) => {
+            payload = payload ? payload : [];
+            if (!payload[0]?.payload?.time) return null;
+            return <span>{new Date(payload[0].payload.time).toLocaleString('chinese', { hour12: false })}</span>
+          }
+          } />
+          {/* <Tooltip content={renderTooltipContent} /> */}
+          <Area type="monotone" dataKey="errorTime" fill="#eb8b95" stroke='#eb8b9' />
+          <Area type="monotone" dataKey="successTime" fill="#daf8e6" stroke='#5cdd8b' />
+        </AreaChart>
+      </ResponsiveContainer>
+    </div>
+
+  )
 }
 
 export default memo(Status);

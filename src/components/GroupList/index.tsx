@@ -1,19 +1,36 @@
 import { memo } from 'react'
 import { Card } from '@arco-design/web-react'
-import { ITaskGroup } from '@/types/task';
+import { IconEmpty } from '@arco-design/web-react/icon'
 import ListRate from '../listrate/index'
-import styles from './index.module.less'; 
+import styles from './index.module.less';
 import { ITask } from '@/store/task/type';
 interface IGroupListProps {
-  taskGroup: ITask;
+  taskGroup: ITask[];
+  name: string,
+  changeTask: (id: string) => void,
+  activeTaskId: string,
+  groupId?: string
 }
 
-const GroupList = ({ taskGroup }: IGroupListProps) => {
-  const { name, taskId,data } = taskGroup;
-  // 处理选中ListRate
-  // return <Card title={<div style={{ textAlign: 'left' }} className={styles.group_name} >{name}</div>} bodyStyle={{ 'padding': '0px' }} >
-  //   {data.map((item,index) => <ListRate task={item.} key={item.pingTime} isLast={index === tasks.length - 1} isActive={false}  clickCallback={(index)=>console.log(index)}/>)}
-  // </Card>;
-  return <div>1212</div>
+const GroupList = ({ taskGroup, name, groupId, changeTask, activeTaskId }: IGroupListProps) => {
+
+  return <Card title={<div
+    style={{ textAlign: 'left' }}
+    className={styles.group_name} >{name}</div>}
+    bodyStyle={{ 'padding': '0px', height: '100%' }} >
+    {
+      taskGroup.length > 0 ?
+        taskGroup.map(item => <ListRate
+          task={item} key={item.taskId}
+          isActive={item.taskId === activeTaskId}
+          isLast={false}
+          clickCallback={(id) => changeTask(id)}
+        />) :
+        <div style={{ height: '200px', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <IconEmpty style={{ 'display': 'flex', width: '32px', height: '32px' }} />
+          <div>NO data</div>
+        </div>
+    }
+  </Card >;
 }
 export default memo(GroupList);

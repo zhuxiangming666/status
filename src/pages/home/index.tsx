@@ -1,6 +1,5 @@
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useMemo } from 'react';
 
-import { IStatus } from '@/types/task';
 import CardDetail from './cardDetails'
 import styles from './index.module.less';
 import ServiceNameplate from './serviceNameplate';
@@ -8,10 +7,12 @@ import LastStatus from './lastStatus';
 import StatusTable from './statusTable';
 import { TaskEventSource } from '@/api/sse';
 import TaskTab from './taskTab';
-import { useSelector } from 'react-redux';
-import { IStatusData } from '@/store/task/type';
+import { useDispatch, useSelector } from 'react-redux';
+import { IStatus, IStatusData } from '@/store/task/type';
 import { IStoreState } from '@/store/type';
 import status from '../status';
+import { getSinglePing } from '@/store/task/action';
+import { getAllTaskList } from '@/api';
 // import AlertMessage from '@/components/AlertMessage'
 const ServeArray = [{
   title: '响应',
@@ -43,10 +44,41 @@ const server_data = {
 
 const Home = () => {
 
-  const tasks = useSelector<IStoreState,IStatusData>(state=>state.tasks);
+  const taskarr = useSelector<IStoreState, IStatusData>(state => state.tasks);
+  const { activeId, tasks } = taskarr;
+  const dispatch = useDispatch();
+
+  const curTask = useMemo(() => {
+    if (!tasks) return;
+    return tasks.get(activeId);
+  }, [activeId, tasks]);
+
+  // get taskList
   useEffect(() => {
-    const fn = (ev: Event) => {
-      console.log(ev);
+    const fetch = async () => {
+      // return getAllTaskList();
+      const data = await getAllTaskList();
+      console.log('[123123]', data);
+    }
+    fetch();
+    // const list = fetch();
+    // const list = await getAllTaskList();
+    // console.log(list);
+  }, []);
+
+  useEffect(() => {
+    const fn = (ev: any) => {
+      let data: any = ev.data;
+      try {
+        data = JSON.parse(ev.data);
+      } catch (e) {
+        return;
+      }
+
+
+      const ipingTmp = { status: data.Ready ? IStatus.SUCCESS : IStatus.ERROR, time: data.RequestTime, pingTime: data.ResponseDuration };
+      const taskId = data.CallID;
+      dispatch(getSinglePing({ taskId, rate: data.Sla, data: ipingTmp }))
     }
     const ev = TaskEventSource.getEventSource();
     ev.addEventListener('ping', fn);
@@ -55,7 +87,7 @@ const Home = () => {
       ev.removeEventListener('ping', fn)
       TaskEventSource.destroy();
     };
-  }, []);
+  }, [dispatch]);
 
   return (<div className={styles.home}>
     <div className={styles.home_left}>
@@ -64,25 +96,25 @@ const Home = () => {
     </div>
     <div className={styles.home_right}>
       {
-        (
+        curTask && (
           <>
             {/* 服务铭牌 */}
-      <ServiceNameplate {...server_data} />
-      {/* 描述信息 */}
-      <div className={styles.home_right_bottom}>
-        <LastStatus taskStatus={[IStatus.SUCCESS]} />
-        <div className={styles.serve_detail}>
-          {
-            ServeArray.map(item => <CardDetail {...item} key={`${item.desc}${item.title}`} />)
-          }</div>
-      </div>
+            <ServiceNameplate {...server_data} />
+            {/* 描述信息 */}
+            <div className={styles.home_right_bottom}>
+              <LastStatus taskStatus={curTask.data.map(item => item.status)} />
+              {/* <div className={styles.serve_detail}>
+                {
+                  curTask.data.map(item => <CardDetail {...item} key={`${item.desc}${item.title}`} />)
+                }</div> */}
+            </div>
 
-      <StatusTable />
-      {/* <Example /> */}
-      </>
+            <StatusTable />
+            {/* <Example /> */}
+          </>
         )
       }
-    
+
     </div>
   </div>)
 };

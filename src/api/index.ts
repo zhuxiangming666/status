@@ -9,9 +9,9 @@ export const createTask = (data: {kind: string,name: string,ip: string, heartbea
   });
 }
 
-export const testGet = ()=>{
+export const getAllTaskList = ()=>{
   return request({
-    url: `/hello`,
+    url: `/list`,
     method: 'get',
   });
 }

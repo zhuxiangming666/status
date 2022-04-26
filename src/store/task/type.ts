@@ -1,6 +1,6 @@
 export enum IStatus {
-  success = 'success',
-  error = 'error'
+  SUCCESS = 'success',
+  ERROR = 'error'
 }
 
 export interface IPing {
