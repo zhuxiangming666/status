@@ -1,17 +1,30 @@
 import { memo, useState } from 'react';
 import { Modal, Button, Form, Input, Select, Message, InputNumber } from '@arco-design/web-react';
-import { createTask } from '@/api';
+import { createTask as apiCreateTask } from '@/api';
+import { useDispatch } from 'react-redux';
 
+import { createTask } from '@/store/task/action'
 const FormItem = Form.Item;
 interface IProps {
   setVisible: (bool: boolean) => void;
 }
 function CreateTask({ setVisible }: IProps) {
   const [form] = Form.useForm();
+  const dispatch = useDispatch();
   function onOk() {
     form.validate().then((res) => {
-      // console.log(res);
-      createTask({ ...res, 'heartbeat_time': res.heartbeat_time.toString() });
+      apiCreateTask({ ...res, 
+        'heartbeat_time': res.heartbeat_time.toString() 
+      }).then(res=>{
+        console.log(res);
+        dispatch(createTask({id: '1',rate: 0,data:[]}));
+        setVisible(false);
+        void Message.success('创建任务成功',);
+      }).catch(err=>{
+        void Message.error('创建任务失败')
+      });
+    }).catch(err=>{
+      console.log('[BUTTERFLY][07:41:21]', err);
     });
   }
 

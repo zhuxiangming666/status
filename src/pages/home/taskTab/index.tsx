@@ -1,7 +1,10 @@
-import GroupList from '@/components/GroupList';
+import ListRate from '@/components/GroupList';
+import { ITask } from '@/store/task/type';
+import { IStoreState } from '@/store/type'
 import { IStatus } from '@/types/task';
 import { Alert, Button, Message, Select, Tabs, Typography } from '@arco-design/web-react';
-import { memo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
+import { useSelector } from 'react-redux';
 import CreateTask from '../CreateTask';
 import styles from './index.module.less';
 const TabPane = Tabs.TabPane;
@@ -35,11 +38,24 @@ const options = ['最近1小时', '最近3小时', '最近6小时', '最近12小
 const Option = Select.Option;
 const TaskTab = () => {
   const [isAddTask, setIsAddTask] = useState(false);
+  const tasks = useSelector<IStoreState,Map<string,ITask> | null>(state=>state.tasks.tasks);
+  
+  const showTasks = useMemo(()=>{
+    if(!tasks) return [] as ITask[];
+    return Array.from(tasks.values());
+  },[tasks]);
+
   return <>
     <Tabs defaultActiveTab='1' >
       <TabPane key='1' title='task'>
         {/* 任务list */}
-        <div><Button shape='round' status='success' onClick={() => setIsAddTask(true)}>添加监控</Button></div>
+          <div><Button shape='round' status='success' onClick={() => setIsAddTask(true)}>添加监控</Button></div>
+          <div>
+            <div>任务列表</div>
+            {
+              showTasks.map(item => <ListRate taskGroup={item} key={item.taskId} />)
+            }
+          </div>
       </TabPane>
       <TabPane key='2' title='group'>
 
@@ -61,9 +77,9 @@ const TaskTab = () => {
             </Option>
           ))}
         </Select>
-        {
+        {/* {
           groupTasks.map(item => <GroupList taskGroup={item} key={item.id} />)
-        }
+        } */}
       </TabPane>
     </Tabs >
     {/* 添加任务模态框 */}

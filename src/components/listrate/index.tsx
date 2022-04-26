@@ -1,6 +1,7 @@
 import { memo } from 'react'
 import className from 'classnames';
-import { IStatus, ITask } from "@/types/task"
+import { IStatus } from "@/types/task";
+import { ITask } from "@/store/task/type";
 import { Progress } from "@arco-design/web-react"
 import styles from './index.module.less';
 
@@ -11,9 +12,11 @@ interface IProps {
   isLast?: boolean
 }
 const ListRate = ({ task,isActive,clickCallback,isLast }: IProps) => {
-  const { rate, name, status,id } = task;
-  const color = status === IStatus.SUCCESS ? '#F53F3F' : '#00B42A'
-  return <div className={className(styles.list_rate,isLast?'':styles.after_line)} onClick={()=>clickCallback?.(id)}>
+  const { rate, name, data,taskId } = task;
+  const status = data[data.length -1].status;
+  const color = status === 'success' ? '#F53F3F' : '#00B42A'
+  
+  return <div className={className(styles.list_rate,isLast?'':styles.after_line)} onClick={()=>clickCallback?.(taskId)}>
     <div className={styles.list_rate_left}>
       <Progress width={40} type='circle' percent={rate} color={color}  formatText={(num: number) => num} />
     </div>

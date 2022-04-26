@@ -1,0 +1,1 @@
+export const SET_COMMON_STATUS = 'SET_COMMON_STATUS';

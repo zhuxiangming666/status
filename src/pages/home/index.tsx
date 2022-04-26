@@ -7,8 +7,11 @@ import ServiceNameplate from './serviceNameplate';
 import LastStatus from './lastStatus';
 import StatusTable from './statusTable';
 import { TaskEventSource } from '@/api/sse';
-import CreateTask from './CreateTask';
 import TaskTab from './taskTab';
+import { useSelector } from 'react-redux';
+import { IStatusData } from '@/store/task/type';
+import { IStoreState } from '@/store/type';
+import status from '../status';
 // import AlertMessage from '@/components/AlertMessage'
 const ServeArray = [{
   title: '响应',
@@ -40,6 +43,7 @@ const server_data = {
 
 const Home = () => {
 
+  const tasks = useSelector<IStoreState,IStatusData>(state=>state.tasks);
   useEffect(() => {
     const fn = (ev: Event) => {
       console.log(ev);
@@ -55,13 +59,14 @@ const Home = () => {
 
   return (<div className={styles.home}>
     <div className={styles.home_left}>
-
       <div className={styles.home_left_header}> 这里缺一个logo</div>
       <TaskTab />
-
     </div>
     <div className={styles.home_right}>
-      {/* 服务铭牌 */}
+      {
+        (
+          <>
+            {/* 服务铭牌 */}
       <ServiceNameplate {...server_data} />
       {/* 描述信息 */}
       <div className={styles.home_right_bottom}>
@@ -74,8 +79,10 @@ const Home = () => {
 
       <StatusTable />
       {/* <Example /> */}
-
-
+      </>
+        )
+      }
+    
     </div>
   </div>)
 };
