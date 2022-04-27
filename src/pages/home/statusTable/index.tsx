@@ -18,33 +18,27 @@ const columns = [
   }
 ];
 
-const data = [
-  {
-    status: IStatus.SUCCESS,
-    time: '2002-12-08 14:09:08',
-    message: '200 - ok'
-  },{
-    status: IStatus.ERROR,
-    time: '2002-12-08 14:09:08',
-    message: '200 - ok'
-  },{
-    status: IStatus.SUCCESS,
-    time: '2002-12-08 14:09:08',
-    message: 'error'
-  }
-];
+export interface IMessage {
+  status: string;
+  time: string;
+  message: string;
+}
 
-const StatusTable = () =>{
+interface IProps {
+  data: IMessage[]
+}
+
+const StatusTable = ({ data }: IProps) => {
   return <div className={styles.status_table}>
     <div className={styles.status_table_header}>
-      
     </div>
-      <Table 
-          columns={columns} 
-          data={data} 
-          virtualized={true} 
-          pagination={false}
-        />
+    <Table
+      style={{ height: '300px' }}
+      columns={columns}
+      data={data}
+      virtualized={true}
+      pagination={false}
+    />
   </div>
 };
 export default memo(StatusTable);

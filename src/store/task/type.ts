@@ -7,6 +7,7 @@ export interface IPing {
   status: IStatus,
   pingTime: number,
   time: number,
+  reason?: string,
 }
 
 export type IPingData = IPing & {rate : number};
@@ -16,6 +17,7 @@ export interface ITask {
   name: string,
   rate: number,
   data: IPing[],
+  heartBeat: number
 }
 
 export interface IStatusData {

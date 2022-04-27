@@ -3,6 +3,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigator
 } from "react-router-dom";
 
 const Home = lazy(() => import('@/pages/home'));
@@ -12,8 +13,8 @@ const Status = lazy(() => import('@/pages/status'));
 const LayOut = () => {
   return <BrowserRouter>
     <Routes>
-      <Route path='/home' element={<Suspense fallback={<div>loading...</div>}><Home /></Suspense>}></Route>
-      <Route path='/status' element={<Suspense fallback={<div>loading...</div>}><Status /></Suspense>} ></Route>
+      <Route path='/' element={<Suspense fallback={<div>loading...</div>}><Home /></Suspense>}></Route>
+      {/* <Route path='/status' element={<Suspense fallback={<div>loading...</div>}><Status /></Suspense>} ></Route> */}
     </Routes >
   </BrowserRouter >
 }

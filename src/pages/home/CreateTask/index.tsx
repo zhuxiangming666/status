@@ -18,7 +18,7 @@ function CreateTask({ setVisible }: IProps) {
         ...res,
         'heartbeat_time': res.heartbeat_time.toString()
       }).then(result => {
-        dispatch(createTask({ taskId: result.callID, rate: 100, data: [], name: res.name } as ITask));
+        dispatch(createTask({ taskId: result.call_id, rate: 100, data: [], name: res.name, heartBeat: res.heartbeat_time } as ITask));
         setVisible(false);
         void Message.success('创建任务成功',);
       }).catch(err => {
@@ -54,7 +54,7 @@ function CreateTask({ setVisible }: IProps) {
           <Input placeholder='' />
         </FormItem>
         <FormItem label='心跳' required field='heartbeat_time' rules={[{ required: true }]}>
-          <InputNumber placeholder='请输入心跳的时间(s)' min={15} />
+          <InputNumber placeholder='请输入心跳的时间(s)' min={1} />
         </FormItem>
         <FormItem label='名称' required field='name' rules={[{ required: true }]}>
           <Input placeholder='' />

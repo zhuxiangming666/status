@@ -22,9 +22,10 @@ const StatusItem = ({ status }: { status: IStatus }) => {
 
 interface IProps {
   taskStatus: IStatus[],
+  heartBeat: number,
 }
 type IButtonStatus = 'success' | 'danger';
-const LastStatus = ({ taskStatus }: IProps) => {
+const LastStatus = ({ taskStatus, heartBeat }: IProps) => {
   const { elementWH, elementRef } = useGetElementWH();
   const taskStatusDefault = useMemo(() => {
     // 数组长度不足时填充 元素 
@@ -52,7 +53,7 @@ const LastStatus = ({ taskStatus }: IProps) => {
       <div className={styles.status_block}>
         {taskStatusDefault.map((item, index) => <StatusItem status={item} key={index} />)}
       </div>
-      <div className={styles.status_text}>{`检测频率${10}s`}</div>
+      <div className={styles.status_text}>{`检测频率${heartBeat}s`}</div>
     </div>
     <div className={styles.last_status_right}>
       <Button status={type} shape='round' size='large'>{text}</Button>

@@ -15,3 +15,10 @@ export const getAllTaskList = ()=>{
     method: 'get',
   });
 }
+
+export const getTaskDataById = (id:string,num: number) => {
+  return request({
+    url: `/events/${id}/${num}`,
+    method: 'get',
+  })
+}
