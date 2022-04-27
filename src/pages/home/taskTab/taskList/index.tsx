@@ -2,6 +2,8 @@ import { ITask } from '@/store/task/type';
 import { IconEmpty } from '@arco-design/web-react/icon';
 import styles from './index.module.less';
 import ListRate from '@/components/listrate/index'
+import { useMemo, useState } from 'react';
+import { debounce } from '@/utils/utils';
 interface IProps {
   taskGroup: ITask[];
   name: string,
@@ -10,17 +12,24 @@ interface IProps {
 }
 const TaskList = ({ taskGroup, name, changeTask, activeTaskId }: IProps) => {
 
+  const [filter,setFilter] = useState('');
+
+  const showTaskGroup = useMemo(() => {
+    return taskGroup.filter(item=>item.name.includes(filter));
+  },[taskGroup,filter]);
+
   return <div className={styles.task_list}>
     <div className={styles.task_list_header}>
       <input
         className={styles.task_list_input}
         placeholder='搜索...'
+        onChange={(e)=>debounce(setFilter,100)(e.target.value)}
       />
     </div>
     <div className={styles.task_list_body}>
       {
-        taskGroup.length > 0 ?
-          taskGroup.map(item => <ListRate
+        showTaskGroup.length > 0 ?
+        showTaskGroup.map(item => <ListRate
             task={item} key={item.taskId}
             isActive={item.taskId === activeTaskId}
             isLast={false}

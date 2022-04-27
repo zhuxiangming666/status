@@ -5,8 +5,8 @@ export enum IStatus {
 
 export interface IPing {
   status: IStatus,
-  pingTime?: number,
-  time?: number,
+  pingTime: number,
+  time: number,
 }
 
 export type IPingData = IPing & {rate : number};

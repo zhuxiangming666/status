@@ -13,6 +13,7 @@ import { IStoreState } from '@/store/type';
 import status from '../status';
 import { getSinglePing } from '@/store/task/action';
 import { getAllTaskList } from '@/api';
+import StatusChart from './right/chart'
 // import AlertMessage from '@/components/AlertMessage'
 const ServeArray = [{
   title: '响应',
@@ -56,7 +57,6 @@ const Home = () => {
   // get taskList
   useEffect(() => {
     const fetch = async () => {
-      // return getAllTaskList();
       const data = await getAllTaskList();
       console.log('[123123]', data);
     }
@@ -99,7 +99,7 @@ const Home = () => {
         curTask && (
           <>
             {/* 服务铭牌 */}
-            <ServiceNameplate {...server_data} />
+            {/* <ServiceNameplate {...server_data} /> */}
             {/* 描述信息 */}
             <div className={styles.home_right_bottom}>
               <LastStatus taskStatus={curTask.data.map(item => item.status)} />
@@ -108,8 +108,10 @@ const Home = () => {
                   curTask.data.map(item => <CardDetail {...item} key={`${item.desc}${item.title}`} />)
                 }</div> */}
             </div>
-
+            
+            <StatusChart data={curTask.data.map(item=>({time: item.time,status: item.status,pingTime: item.time}))}/>
             <StatusTable />
+            
             {/* <Example /> */}
           </>
         )
