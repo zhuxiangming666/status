@@ -34,7 +34,7 @@ const LastStatus = ({ taskStatus, heartBeat }: IProps) => {
     if (taskStatus.length < number)
       return taskStatus.concat(Array(number - taskStatus.length).fill(''));
     if (taskStatus.length > number) {
-      return taskStatus.splice(taskStatus.length - number);
+      return taskStatus.slice(taskStatus.length - number);
     }
     return taskStatus;
   }, [taskStatus, elementWH.w]);
