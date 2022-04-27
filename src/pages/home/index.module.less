@@ -1,10 +1,28 @@
 .home{
   display: flex;
-  flex-direction: row;
+  text-align: left;
+  height: 100%;
   .home_left{
     flex: 1;
+    min-width: 300px;
+    padding: 20px;
+    background: #fefefe;
   }
   .home_right{
-    flex: 1;
+    flex: 2;
+    margin: 24px 0;
+    border-radius: 10px;
+    background: #F2F3F5;
+    padding: 20px;
+    box-shadow: 0 15px 70px rgb(0 0 0 / 10%);
+    .home_right_bottom{
+      .serve_detail{
+        display: flex;
+        justify-content: space-evenly;
+        background: #fff;
+        box-shadow: 3px 10px 5px #efefef;
+        border-radius: 10px;
+      }
+    }
   }
 }

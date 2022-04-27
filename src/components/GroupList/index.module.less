@@ -1,0 +1,13 @@
+@import '../../styles/color.less';
+.group_name{
+  display:flex;
+  &::before{
+    content: '';
+    display: block;
+    height: 16px;
+    width: 5px;
+    align-self: center;
+    background: @primary-info;
+    margin-right: 4px;
+  }
+}

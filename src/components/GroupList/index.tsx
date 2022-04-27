@@ -1,32 +1,36 @@
 import { memo } from 'react'
-import { Card, Select } from '@arco-design/web-react'
-import { ITaskGroup } from '@/types/task';
+import { Card } from '@arco-design/web-react'
+import { IconEmpty } from '@arco-design/web-react/icon'
 import ListRate from '../listrate/index'
+import styles from './index.module.less';
+import { ITask } from '@/store/task/type';
 interface IGroupListProps {
-  taskGroup: ITaskGroup;
-}
-interface ISelectProps {
-  handleSelect: (index: number) => void;
-  options?: string[];
+  taskGroup: ITask[];
+  name: string,
+  changeTask: (id: string) => void,
+  activeTaskId: string,
+  groupId?: string
 }
 
-const Option = Select.Option;
+const GroupList = ({ taskGroup, name, groupId, changeTask, activeTaskId }: IGroupListProps) => {
 
-const SelectTimer = ({ handleSelect, options }: ISelectProps) => {
-  const optionsDefault = options || ['最近1小时', '最近3小时', '最近6小时', '最近12小时', '最近1天'];
-  return <Select>
-    {optionsDefault.map((option, id) => (
-      <Option key={option} value={option}>
-        {option}
-      </Option>
-    ))}
-  </Select>
-}
-const GroupList = ({ taskGroup }: IGroupListProps) => {
-  const { name, tasks } = taskGroup;
-  // 处理选中ListRate
-  return <Card title={<div style={{ textAlign: 'left' }}>{name}</div>} >
-    {tasks.map((item) => <ListRate task={item} key={item.id} />)}
-  </Card>;
+  return <Card title={<div
+    style={{ textAlign: 'left' }}
+    className={styles.group_name} >{name}</div>}
+    bodyStyle={{ 'padding': '0px', height: '100%' }} >
+    {
+      taskGroup.length > 0 ?
+        taskGroup.map(item => <ListRate
+          task={item} key={item.taskId}
+          isActive={item.taskId === activeTaskId}
+          isLast={false}
+          clickCallback={(id) => changeTask(id)}
+        />) :
+        <div style={{ height: '200px', width: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+          <IconEmpty style={{ 'display': 'flex', width: '32px', height: '32px' }} />
+          <div>NO data</div>
+        </div>
+    }
+  </Card >;
 }
 export default memo(GroupList);
