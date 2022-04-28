@@ -22,3 +22,11 @@ export const getTaskDataById = (id:string,num: number) => {
     method: 'get',
   })
 }
+
+// 删除当个任务
+export const deleteTask = (number: string) =>{
+  return request({
+    url: `/task/${number}`,
+    method: 'delete',
+  })
+};

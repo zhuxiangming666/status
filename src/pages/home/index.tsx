@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState,useCallback } from 'react';
 
 import CardDetail from './cardDetails'
 import styles from './index.module.less';
@@ -92,12 +92,10 @@ const Home = () => {
 
 
 
-
-
-  useEffect(() => {
+  const getTaskMsgs = useCallback((number: number)=>{
     const fetch = async () => {
       try {
-        const data = await getTaskDataById(activeId, 600);
+        const data = await getTaskDataById(activeId,number);
         const taskId = data.call_id;
         const dataArr: IPing[] = data.events.map((item: any) => ({
           status: item.ready ? IStatus.SUCCESS : IStatus.ERROR,
@@ -115,7 +113,12 @@ const Home = () => {
     void fetch().finally(() => {
       setLoading(false);
     });
-  }, [activeId, dispatch]);
+  },[activeId,dispatch])
+
+
+  useEffect(() => {
+    getTaskMsgs(1000);
+  }, [getTaskMsgs]);
 
 
   const message = useMemo(() => {
@@ -146,7 +149,10 @@ const Home = () => {
                 }</div>
             </div>
 
-            <StatusChart data={(curTask?.data || []).map(item => ({ time: item.time, status: item.status, pingTime: item.pingTime }))} />
+            <StatusChart 
+              data={(curTask?.data || []).map(item => ({ time: item.time, status: item.status, pingTime: item.pingTime }))} 
+              getNewMsg={getTaskMsgs}
+              />
             <StatusTable data={message} />
 
             {/* <Example /> */}

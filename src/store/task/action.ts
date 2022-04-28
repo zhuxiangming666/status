@@ -53,3 +53,17 @@ export const setTaskData = (id:string , data: IPing[]) => (dispatch: Dispatch<An
   tasksTmp.set(id,statusTmp);
   dispatch(setCommonStatus({ tasks: tasksTmp}));
 }
+
+export const removeTask = (id :string) => (dispatch: Dispatch<AnyAction>,getState: () => IStoreState) => {
+  const originTasks = getState().tasks.tasks;
+  if(!originTasks) return;
+  const status = originTasks.get(id);
+  if(!status) return;
+  let tasksTmp: Map<string,ITask>;
+  tasksTmp = new Map(originTasks);
+  tasksTmp.delete(id);
+  dispatch(setCommonStatus({
+    activeId: '',
+    tasks: tasksTmp
+  }));
+}

@@ -11,11 +11,12 @@ interface IOnePingStatus {
 }
 interface IChartStatus {
   data: IOnePingStatus[],
+  getNewMsg: (number: number) => void
 }
 
 const options = [1000, 3000, 5000, 10000];
 const Option = Select.Option;
-const StatusChart = ({ data }: IChartStatus) => {
+const StatusChart = ({ data,getNewMsg }: IChartStatus) => {
 
   const [number, setNumber] = useState<number>(options[0]); // 图展示的数量
 
@@ -57,7 +58,7 @@ const StatusChart = ({ data }: IChartStatus) => {
         <Select
           style={{ width: 154 }}
           defaultValue={options[0]}
-          onChange={(value) => setNumber(value)}
+          onChange={(value) => getNewMsg(Number(value))}
         >
           {options.map((option, index) => (
             <Option key={option} value={option}>
